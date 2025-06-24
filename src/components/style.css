@@ -1,0 +1,40 @@
+@font-face {
+    font-family: Readex;
+    src: url(../../public/font/ReadexPro-Light.ttf);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Readex;
+    src: url(../../public/font/ReadexPro-Regular.ttf);
+    font-weight: 200;
+}
+
+
+@font-face {
+    font-family: Readex;
+    src: url(../../public/font/ReadexPro-Bold.ttf);
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: Readex;
+    src: url(../../public/font/ReadexPro-Medium.ttf);
+    font-weight: 500;
+}
+
+body {
+    background: rgb(0, 81, 255);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.App {
+    direction: rtl;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
