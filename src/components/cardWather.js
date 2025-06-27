@@ -41,6 +41,7 @@ export default function CardWather({ changDirection, setrchangDirection }) {
         // }
 
         const newLang = i18n.language === "en" ? "ar" : "en";
+
         i18n.changeLanguage(newLang);
 
         // نستخدم اللغة الجديدة لضبط التاريخ
@@ -156,7 +157,7 @@ export default function CardWather({ changDirection, setrchangDirection }) {
 
                 </Card>
                 <div style={{ direction: changDirection ? "ltr" : "rtl", marginTop: 20 }}>
-                    <Button variant="text" sx={{ color: "main" }} onClick={changeLanguage}>{t("English")}</Button>
+                    <Button variant="text" sx={{ color: "main" }} onClick={changeLanguage}>{i18n.language == "en" ? "arabic" : "الانقليزية"}</Button>
                 </div>
             </Container >
 

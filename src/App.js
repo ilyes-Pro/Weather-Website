@@ -17,6 +17,8 @@ const theme = createTheme({
 
 function App() {
   const [changDirection, setrchangDirection] = useState(true)
+  //  تقدر تستعمل هداي بلاست الهوك لي درته 
+  // <div style={{ direction: i18n.language === "ar" ? "rtl" : "ltr" }}> 
   return (
     <ThemeProvider theme={theme}>
 
