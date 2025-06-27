@@ -19,7 +19,8 @@ import 'moment/locale/ar';
 import { changeLanguage } from 'i18next';
 
 let cancelAxios = null;
-export default function CardWather({ changDirection, setrchangDirection }) {
+export default function CardWather() {
+
 
     const { t, i18n } = useTranslation();
     const [todayDate, setTodayDate] = useState("");
@@ -27,7 +28,9 @@ export default function CardWather({ changDirection, setrchangDirection }) {
     const [weatherData, setweatherData] = useState({
         temperature: 0,
         Tmax: 0,
-        Tmin: 0
+        Tmin: 0,
+        state: "",
+        img: ""
     });
 
 
@@ -41,29 +44,27 @@ export default function CardWather({ changDirection, setrchangDirection }) {
         // }
 
         const newLang = i18n.language === "en" ? "ar" : "en";
-
+        console.log(newLang)
         i18n.changeLanguage(newLang);
 
         // نستخدم اللغة الجديدة لضبط التاريخ
-        const newDate = moment().locale(newLang).format("LL");
-        setTodayDate(newDate);
-        setrchangDirection(!changDirection);
-        console.log(changDirection)
+
+
 
     }
 
     useEffect(() => {
 
-        const todayInArabic = moment().locale("ar").format("LL");
+
 
 
         // const today = new Date().toISOString().split("T")[0];
-        const today = moment().locale("en").format("YYYY-MM-DD");
-        console.log(today)
+        const today = moment().locale(i18n.language).format("YYYY-MM-DD");
 
-        setTodayDate(todayInArabic);
 
-        axios.get('https://api.open-meteo.com/v1/forecast?latitude=34.858891&longitude=-1.729586&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m',
+        setTodayDate(today);
+
+        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d8f0df30118c4babbf8134910252706&q=Maghnia&days=1&lang=${i18n.language}`,
             {
 
                 cancelToken: new axios.CancelToken((e) => {
@@ -72,39 +73,15 @@ export default function CardWather({ changDirection, setrchangDirection }) {
             }
         )
             .then(response => {
-                const allTemps = response.data.hourly.temperature_2m;
-                const allTimes = response.data.hourly.time;
+                console.log(response.data.forecast.forecastday[0].day.condition.text)
+                console.log(response.data.forecast.forecastday[0].day.condition.icon)
 
-                // هده خاطأة 
-                //             const tempA = {
-
-                //                 Tday: response.data.hourly.time,
-                //                 Tf: response.data.hourly.temperature_2m
-                //             }
-                //                 ;
-                //             const todayTemps = tempA.filter(temp => temp.Tday.startsWith(todayDate));
-                //             const Temp = todayTemps.map(temp => temp.Tf);
-                //             const maxTemp = Math.max(...Temp);
-                //             const minTemp = Math.min(...Temp);
-
-                //             setweatherData({
-                //                 temperature: response.data.current.temperature_2m,
-                //                 Tmax: maxTemp,
-                //                 Tmin: minTemp
-                //             });
-                console.log("ok")
-                const tempsToday = allTimes
-                    .map((time, index) => ({ time, temp: allTemps[index] }))
-                    .filter(entry => entry.time.startsWith(today));
-
-                const tempsOnly = tempsToday.map(entry => entry.temp);
-                const maxTemp = Math.max(...tempsOnly);
-                const minTemp = Math.min(...tempsOnly);
-                console.log(response.data.current.temperature_2m)
                 setweatherData({
-                    temperature: response.data.current.temperature_2m,
-                    Tmax: maxTemp,
-                    Tmin: minTemp
+                    temperature: response.data.current.temp_c,
+                    Tmax: response.data.forecast.forecastday[0].day.maxtemp_c,
+                    Tmin: response.data.forecast.forecastday[0].day.mintemp_c,
+                    state: response.data.forecast.forecastday[0].day.condition.text,
+                    img: response.data.forecast.forecastday[0].day.condition.icon
                 });
             })
             .catch(error => {
@@ -116,7 +93,7 @@ export default function CardWather({ changDirection, setrchangDirection }) {
             cancelAxios();
         }
 
-    }, []);
+    }, [i18n.language]);
 
 
     return (
@@ -140,12 +117,13 @@ export default function CardWather({ changDirection, setrchangDirection }) {
 
                         <Grid container spacing={2}>
                             <Grid size={{ xs: 6 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 15, }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 5, }}>
 
                                     <Typography color="main" variant="h1">{weatherData.temperature}</Typography>
-                                    < WbSunnyIcon sx={{ color: "yellow", fontSize: 70, }} />
+                                    <img src={weatherData.img} style={{ width: 100, height: 100 }} />
+
                                 </div>
-                                <Typography color="main" mb={4} variant="h6">broken clouds</Typography>
+                                <Typography color="main" mb={4} variant="h5">{weatherData.state}</Typography>
                                 <Typography color="main" sx={{ fontSize: 14, fontWeight: 200, }}>{t("Min")}: {weatherData.Tmin} / {t("Max")}: {weatherData.Tmax}</Typography>
                             </Grid>
                             <Grid size={{ xs: 6 }}>
@@ -156,7 +134,7 @@ export default function CardWather({ changDirection, setrchangDirection }) {
                     </CardContent>
 
                 </Card>
-                <div style={{ direction: changDirection ? "ltr" : "rtl", marginTop: 20 }}>
+                <div style={{ direction: i18n.language == "en" ? "rtl" : "ltr", marginTop: 20 }}>
                     <Button variant="text" sx={{ color: "main" }} onClick={changeLanguage}>{i18n.language == "en" ? "arabic" : "الانقليزية"}</Button>
                 </div>
             </Container >

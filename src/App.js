@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './components/style.css';
 import CardWather from './components/cardWather.js';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 const theme = createTheme({
   typography: {
     fontFamily: 'Readex',
@@ -16,14 +17,16 @@ const theme = createTheme({
 
 
 function App() {
-  const [changDirection, setrchangDirection] = useState(true)
+  const { i18n } = useTranslation();
+
+
   //  تقدر تستعمل هداي بلاست الهوك لي درته 
   // <div style={{ direction: i18n.language === "ar" ? "rtl" : "ltr" }}> 
   return (
     <ThemeProvider theme={theme}>
 
-      <div className="App" style={{ direction: changDirection ? "rtl" : "ltr" }}>
-        <CardWather changDirection={changDirection} setrchangDirection={setrchangDirection} />
+      <div className="App" style={{ direction: i18n.language == "en" ? "ltr" : "rtl" }}>
+        <CardWather />
       </div>
     </ThemeProvider>
   );
