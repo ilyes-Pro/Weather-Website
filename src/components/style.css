@@ -31,7 +31,7 @@ body {
 }
 
 .App {
-    direction: rtl;
+
     display: flex;
 
     align-items: center;
