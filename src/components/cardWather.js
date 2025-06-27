@@ -56,7 +56,7 @@ export default function CardWather() {
         setLoading(true);
 
         axios.get(
-            `http://api.weatherapi.com/v1/forecast.json?key=d8f0df30118c4babbf8134910252706&q=Maghnia&days=1&lang=${i18n.language}`,
+            `https://api.weatherapi.com/v1/forecast.json?key=d8f0df30118c4babbf8134910252706&q=Maghnia&days=1&lang=${i18n.language}`,
             {
                 cancelToken: cancelTokenSource.token
             }
