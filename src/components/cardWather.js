@@ -91,6 +91,39 @@ export default function CardWather() {
 
     }, [i18n.language]);
 
+    // عرض شاشة التحميل الكاملة
+    if (loading) {
+        return (
+            <Container maxWidth="sm">
+                <Card sx={{
+                    minWidth: 250,
+                    height: 320,
+                    backgroundColor: 'rgba(0, 50, 158, 0.81)',
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <CardContent>
+                        <div style={{ textAlign: 'center' }}>
+                            <CircularProgress
+                                size={60}
+                                sx={{ color: 'white', mb: 2 }}
+                            />
+                            <Typography
+                                color="white"
+                                variant="h6"
+                            >
+                                {t("Loading weather data...")}
+                            </Typography>
+                        </div>
+                    </CardContent>
+                </Card>
+            </Container>
+        );
+    }
+
     return (
         <Container maxWidth="sm">
             <Card sx={{
@@ -123,57 +156,25 @@ export default function CardWather() {
                                 alignItems: 'center',
                                 gap: 5
                             }}>
-                                {/* عرض التحميل أو درجة الحرارة */}
                                 <Typography color="main" variant="h1">
-                                    {loading ? (
-                                        <CircularProgress
-                                            size={40}
-                                            sx={{ color: 'white' }}
-                                        />
-                                    ) : (
-                                        `${Math.round(weatherData.temperature)}°`
-                                    )}
+                                    {Math.round(weatherData.temperature)}°
                                 </Typography>
 
-                                {/* عرض التحميل أو الصورة */}
-                                <div style={{ width: 100, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    {loading ? (
-                                        <CircularProgress
-                                            size={50}
-                                            sx={{ color: 'white' }}
-                                        />
-                                    ) : (
-                                        weatherData.img && (
-                                            <img
-                                                src={weatherData.img}
-                                                alt="Weather icon"
-                                                style={{ width: 100, height: 100 }}
-                                            />
-                                        )
-                                    )}
-                                </div>
+                                {weatherData.img && (
+                                    <img
+                                        src={weatherData.img}
+                                        alt="Weather icon"
+                                        style={{ width: 100, height: 100 }}
+                                    />
+                                )}
                             </div>
 
                             <Typography color="main" mb={4} variant="h5">
-                                {loading ? (
-                                    <CircularProgress
-                                        size={20}
-                                        sx={{ color: 'white' }}
-                                    />
-                                ) : (
-                                    weatherData.state
-                                )}
+                                {weatherData.state}
                             </Typography>
 
                             <Typography color="main" sx={{ fontSize: 14, fontWeight: 200 }}>
-                                {loading ? (
-                                    <CircularProgress
-                                        size={15}
-                                        sx={{ color: 'white' }}
-                                    />
-                                ) : (
-                                    `${t("Min")}: ${Math.round(weatherData.Tmin)}° / ${t("Max")}: ${Math.round(weatherData.Tmax)}°`
-                                )}
+                                {`${t("Min")}: ${Math.round(weatherData.Tmin)}° / ${t("Max")}: ${Math.round(weatherData.Tmax)}°`}
                             </Typography>
                         </Grid>
 
