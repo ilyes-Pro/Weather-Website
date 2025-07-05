@@ -54,20 +54,11 @@ export default function CardWather() {
         const today = moment().locale(i18n.language).format("YYYY-MM-DD");
         setTodayDate(today);
 
-        dispatch(fetchWeather(i18n.language));
+        dispatch(fetchWeather(i18n.language))
 
-<<<<<<< HEAD
-        axios.get(
-            `https://api.weatherapi.com/v1/forecast.json?key=d8f0df30118c4babbf8134910252706&q=Maghnia&days=1&lang=${i18n.language}`,
-            {
-                cancelToken: cancelTokenSource.token
-            }
-        )
-            .then(response => {
-                console.log('Weather data received:', response.data);
-=======
+
     }, [dispatch, i18n.language]);
->>>>>>> tast
+
 
 
 
