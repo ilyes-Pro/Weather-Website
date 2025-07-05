@@ -18,43 +18,45 @@ import CloudIcon from '@mui/icons-material/Cloud';
 import 'moment/locale/ar';
 import CircularProgress from '@mui/material/CircularProgress';
 
+// redux
+import { useSelector, useDispatch } from 'react-redux'
+// import { increment } from '../features/API/APISlice'
+import { fetchWeather } from '../features/API/APISlice'
+
+
 export default function CardWather() {
-    const [loading, setLoading] = useState(true);
+
+    // const count = useSelector((state) => state.api.value)
+
+
+    const dispatch = useDispatch()
+    const weatherData = useSelector(state => state.api.weatherData)
+    const status = useSelector(state => state.api.status)
+    const error = useSelector(state => state.api.error)
+
+
+
     const { t, i18n } = useTranslation();
     const [todayDate, setTodayDate] = useState("");
 
-    const [weatherData, setWeatherData] = useState({
-        temperature: 0,
-        Tmax: 0,
-        Tmin: 0,
-        state: "",
-        img: ""
-    });
 
-    function LoadingComponent() {
-        return (
-            <div style={{ textAlign: 'center', marginTop: 30 }}>
-                <CircularProgress color="primary" />
-            </div>
-        );
-    }
 
     function changeLanguage() {
+
         const newLang = i18n.language === "en" ? "ar" : "en";
         console.log('Changing to:', newLang);
         i18n.changeLanguage(newLang);
+
+
     }
 
     useEffect(() => {
-        let cancelTokenSource = axios.CancelToken.source();
-
-        // تحديث التاريخ
         const today = moment().locale(i18n.language).format("YYYY-MM-DD");
         setTodayDate(today);
 
-        // بدء التحميل
-        setLoading(true);
+        dispatch(fetchWeather(i18n.language));
 
+<<<<<<< HEAD
         axios.get(
             `https://api.weatherapi.com/v1/forecast.json?key=d8f0df30118c4babbf8134910252706&q=Maghnia&days=1&lang=${i18n.language}`,
             {
@@ -63,36 +65,14 @@ export default function CardWather() {
         )
             .then(response => {
                 console.log('Weather data received:', response.data);
+=======
+    }, [dispatch, i18n.language]);
+>>>>>>> tast
 
-                setWeatherData({
-                    temperature: response.data.current.temp_c,
-                    Tmax: response.data.forecast.forecastday[0].day.maxtemp_c,
-                    Tmin: response.data.forecast.forecastday[0].day.mintemp_c,
-                    state: response.data.forecast.forecastday[0].day.condition.text,
-                    img: response.data.forecast.forecastday[0].day.condition.icon
-                });
 
-                // إيقاف التحميل بعد استلام البيانات
-                setLoading(false);
-            })
-            .catch(error => {
-                if (!axios.isCancel(error)) {
-                    console.error('Error fetching weather data:', error);
-                }
-                // إيقاف التحميل حتى في حالة الخطأ
-                setLoading(false);
-            });
 
-        // تنظيف الطلب
-        return () => {
-            console.log("Cancelling request");
-            cancelTokenSource.cancel('Request cancelled');
-        };
 
-    }, [i18n.language]);
-
-    // عرض شاشة التحميل الكاملة
-    if (loading) {
+    if (status === 'loading') {
         return (
             <Container maxWidth="sm">
                 <Card sx={{
@@ -123,7 +103,9 @@ export default function CardWather() {
             </Container>
         );
     }
-
+    if (status === 'failed') {
+        return <p>❌ حدث خطأ: {error}</p>;
+    }
     return (
         <Container maxWidth="sm">
             <Card sx={{
